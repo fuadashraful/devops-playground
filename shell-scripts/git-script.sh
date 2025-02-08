@@ -1,5 +1,11 @@
 #!/bin/bash
 
+
+get_repo_name_from_pwd() {
+	repoName=$(pwd | awk -F "/" '{print $NF}')
+	echo $repoName
+}
+
 get_root_branch() {
     if [ -n "$(git branch --list master)" ]; then
         root_branch="master"
