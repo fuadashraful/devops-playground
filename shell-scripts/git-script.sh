@@ -16,3 +16,8 @@ get_root_branch() {
         return 1
     fi
 }
+
+git_hard_reset() {
+	git fetch "$1" "$2"
+	git reset --hard "$1/$2"
+}
