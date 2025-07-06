@@ -12,10 +12,15 @@ Ensure you have the following installed on your system:
 
 ## Setup
 
-1. Activate the Poetry virtual environment:
+1. Create the UV virtual environment:
 
    ```sh
-   eval $(poetry env activate)
+   uv venv .venv
+   ```
+1. Install the UV packages:
+
+   ```sh
+   uv sync
    ```
 2. Run sample ansible playbook
     ```sh
