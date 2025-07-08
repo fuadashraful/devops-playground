@@ -17,13 +17,16 @@ Ensure you have the following installed on your system:
    ```sh
    uv venv .venv
    ```
-1. Install the UV packages:
+2. Install the UV packages:
 
    ```sh
    uv sync
    ```
-2. Run sample ansible playbook
+3. Run sample ansible playbook
     ```sh
     ansible-playbook -i inventory playbook-01.yml -u fuad -vvv
     ```
-
+4. Run SDKMAN & JAVA install playbook
+   ```
+   ansible-playbook install_java_sdkman.yml -K -vvv
+   ```

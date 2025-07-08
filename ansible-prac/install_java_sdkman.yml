@@ -1,0 +1,46 @@
+---
+- name: Install Java 21 LTS via SDKMAN
+  hosts: localhost
+  connection: local
+  gather_facts: false  # It's okay to keep this false for performance
+  vars:
+    # Use lookup('env', 'HOME') to get the user's home directory
+    # This works even when gather_facts is false.
+    user_home: "{{ lookup('env', 'HOME') }}"
+    sdkman_dir: "{{ user_home }}/.sdkman"
+    java_lts_version: "21.0.3-tem"
+
+  tasks:
+    - name: Ensure curl, unzip, and zip are present
+      become: true # Run this task with root privileges
+      package:
+        name:
+          - curl
+          - unzip
+          - zip
+        state: present
+
+    - name: Install SDKMAN
+      # No 'become' needed here; it will run as the default user
+      shell: 'curl -s "https://get.sdkman.io" | bash'
+      args:
+        creates: "{{ sdkman_dir }}/bin/sdkman-init.sh"
+        executable: /bin/bash
+
+    - name: Source SDKMAN and install Java {{ java_lts_version }}
+      shell: |
+        . "{{ sdkman_dir }}/bin/sdkman-init.sh"
+        sdk install java {{ java_lts_version }}
+      args:
+        # Check if the specific Java version is already installed to ensure idempotency
+        creates: "{{ sdkman_dir }}/candidates/java/{{ java_lts_version }}"
+        executable: /bin/bash
+      changed_when: true # This command always changes the system state if it runs
+
+    - name: Set default Java version to {{ java_lts_version }}
+      shell: |
+        . "{{ sdkman_dir }}/bin/sdkman-init.sh"
+        sdk default java {{ java_lts_version }}
+      args:
+        executable: /bin/bash
+      changed_when: true
